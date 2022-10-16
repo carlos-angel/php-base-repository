@@ -1,0 +1,58 @@
+version: '3.5'
+
+services:
+  php-base-repository-web:
+    container_name: php-base-repository-web
+    build:
+      context: ./docker/nginx
+      args:
+        UID: $U_ID
+    ports:
+      - 1000:80
+    volumes:
+      - ./:/appdata/www
+    depends_on:
+      - php-base-repository-be
+    networks:
+      - php-base-repository-network
+
+  php-base-repository-be:
+    container_name: php-base-repository-be
+    build:
+      context: ./docker/php
+      args:
+        UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    ###> XDEBUG 3 ###
+    # Use your client IP here
+    # Linux: run "ip a | grep docker0"
+    # Windows (with WSL2) and Mac: host.docker.internal
+    environment:
+      XDEBUG_CLIENT_HOST: 172.17.0.1
+      XDEBUG_CLIENT_PORT: 9003
+      PHP_IDE_CONFIG: serverName=php-base-repository-be
+    networks:
+      - php-base-repository-network
+    depends_on:
+      - php-base-repository-mysql
+
+  php-base-repository-mysql:
+    container_name: php-base-repository-mysql
+    image: mysql:8.0.26
+    ports:
+      - '3336:3306'
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - php-base-repository-mysql-data:/var/lib/mysql
+    networks:
+      - php-base-repository-network
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+networks:
+  php-base-repository-network:
+
+volumes:
+  php-base-repository-mysql-data:
