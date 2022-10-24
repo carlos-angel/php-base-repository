@@ -4,9 +4,8 @@ Este repositorio contiene una configuración básica para ejecutar aplicaciones 
 
 ## Contenedores
 
-- contenedor con la versión de PHP 8.1.1
+- contenedor con la versión de PHP 8.1.1 y apache 2.4..51
 - contenedor con la versión MySQL 8.0.26
-- contenedor con la versión NGINX 1.19
 
 ## Instrucciones
 
