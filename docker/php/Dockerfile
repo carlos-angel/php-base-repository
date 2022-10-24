@@ -1,4 +1,4 @@
-FROM php:8.1.1-fpm
+FROM php:8.1.1-apache
 
 ARG UID
 
@@ -7,7 +7,6 @@ RUN adduser -u ${UID} --disabled-password --gecos "" appuser
 RUN mkdir /home/appuser/.ssh
 RUN chown -R appuser:appuser /home/appuser/
 RUN echo "StrictHostKeyChecking no" >> /home/appuser/.ssh/config
-RUN echo "alias sf=/appdata/www/bin/console" >> /home/appuser/.bashrc
 
 # Install packages and PHP extensions
 RUN apt update \
@@ -26,9 +25,7 @@ RUN apt update \
 RUN curl https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
 RUN composer self-update
 
-RUN mkdir -p /appdata/www
-
 # Config XDEBUG
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-WORKDIR /appdata/www
+WORKDIR /var/www/html

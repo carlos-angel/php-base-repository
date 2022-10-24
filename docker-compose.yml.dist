@@ -1,21 +1,6 @@
 version: '3.5'
 
 services:
-  php-base-repository-web:
-    container_name: php-base-repository-web
-    build:
-      context: ./docker/nginx
-      args:
-        UID: $U_ID
-    ports:
-      - 1000:80
-    volumes:
-      - ./:/appdata/www
-    depends_on:
-      - php-base-repository-be
-    networks:
-      - php-base-repository-network
-
   php-base-repository-be:
     container_name: php-base-repository-be
     build:
@@ -23,7 +8,9 @@ services:
       args:
         UID: $U_ID
     volumes:
-      - ./:/appdata/www
+      - ./src/:/var/www/html/
+    ports:
+      - '1000:80'
     ###> XDEBUG 3 ###
     # Use your client IP here
     # Linux: run "ip a | grep docker0"
